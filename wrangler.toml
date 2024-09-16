@@ -1,0 +1,9 @@
+name = "itchat"
+main = "worker.js"
+compatibility_date = "2023-08-23"
+send_metrics = true
+node_compat = true
+
+[[kv_namespaces]]
+binding = "tokens"
+id = "7205115c449c46159216c1c4eeca3d84"
