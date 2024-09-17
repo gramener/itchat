@@ -1,14 +1,25 @@
+import { getAssetFromKV } from "@cloudflare/kv-asset-handler";
+import manifestJSON from "__STATIC_CONTENT_MANIFEST";
+
+const assetManifest = JSON.parse(manifestJSON);
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    if (routes[url.pathname]) return await routes[url.pathname](request, env, ctx);
-    return new Response(null, { status: 404 });
+    if (routes[url.pathname]) return await routes[url.pathname]({ url, request, env, ctx });
+    try {
+      return await getAssetFromKV(
+        { request, waitUntil: ctx.waitUntil.bind(ctx) },
+        { ASSET_NAMESPACE: env.__STATIC_CONTENT, ASSET_MANIFEST: assetManifest },
+      );
+    } catch {
+      return new Response("Not Found", { status: 404 });
+    }
   },
 };
 
 const routes = {
-  "/token": async (request, env) => {
-    const url = new URL(request.url);
+  "/token": async ({ url, env }) => {
     const code = url.searchParams.get("code");
 
     if (!code) {
@@ -33,29 +44,47 @@ const routes = {
     if (tokenData.access_token && tokenData.refresh_token) {
       await env.tokens.put("access_token", tokenData.access_token);
       await env.tokens.put("refresh_token", tokenData.refresh_token);
-      return new Response("Tokens stored successfully", { status: 200 });
+      return new Response(JSON.stringify(tokenData), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
     } else {
-      return new Response("Failed to obtain tokens", { status: 400 });
+      return new Response(JSON.stringify({ error: "Failed to obtain tokens", details: tokenData }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
   },
 
-  "/requests": async (request, env) => {
+  "/requests": async ({ url, request, env }) => {
     let accessToken = await env.tokens.get("access_token");
     if (!accessToken) accessToken = await refreshAccessToken(env);
 
-    const inputData = {
+    const email = url.searchParams.get("email");
+
+    let inputData = {
       list_info: {
-        row_count: "100",
+        row_count: "10",
         start_index: "1",
         sort_field: "created_time",
         sort_order: "desc",
+        get_total_count: "true",
+        fields_required: ["id", "display_id", "subject", "status", "technician", "created_time", "due_by_time"],
       },
     };
 
-    const encodedInputData = encodeURIComponent(JSON.stringify(inputData));
-    const url = `https://sdpondemand.manageengine.com/app/itdesk/api/v3/requests?input_data=${encodedInputData}`;
+    if (email) {
+      inputData.list_info.search_criteria = {
+        field: "requester.email_id",
+        condition: "is",
+        value: email,
+      };
+    }
 
-    const sdpResponse = await fetch(url, {
+    const encodedInputData = encodeURIComponent(JSON.stringify(inputData));
+    const sdpUrl = `https://sdpondemand.manageengine.com/app/itdesk/api/v3/requests?input_data=${encodedInputData}`;
+
+    const sdpResponse = await fetch(sdpUrl, {
       method: "GET",
       headers: {
         Accept: "application/vnd.manageengine.sdp.v3+json",
@@ -67,6 +96,41 @@ const routes = {
       // Token expired, refresh and retry
       accessToken = await refreshAccessToken(env);
       return routes["/requests"](request, env); // Retry with new token
+    }
+
+    const sdpData = await sdpResponse.json();
+    return new Response(JSON.stringify(sdpData), {
+      status: sdpResponse.status,
+      headers: { "Content-Type": "application/json" },
+    });
+  },
+
+  "/request": async ({ url, env }) => {
+    let accessToken = await env.tokens.get("access_token");
+    if (!accessToken) accessToken = await refreshAccessToken(env);
+
+    const id = url.searchParams.get("id");
+    if (!id) {
+      return new Response(JSON.stringify({ error: "Missing request ID" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const sdpUrl = `https://sdpondemand.manageengine.com/app/itdesk/api/v3/requests/${id}`;
+
+    const sdpResponse = await fetch(sdpUrl, {
+      method: "GET",
+      headers: {
+        Accept: "application/vnd.manageengine.sdp.v3+json",
+        Authorization: `Zoho-oauthtoken ${accessToken}`,
+      },
+    });
+
+    if (sdpResponse.status === 401) {
+      // Token expired, refresh and retry
+      accessToken = await refreshAccessToken(env);
+      return routes["/request"]({ url, env }); // Retry with new token
     }
 
     const sdpData = await sdpResponse.json();

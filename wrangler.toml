@@ -7,3 +7,6 @@ node_compat = true
 [[kv_namespaces]]
 binding = "tokens"
 id = "7205115c449c46159216c1c4eeca3d84"
+
+[site]
+bucket = "./public"
