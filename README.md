@@ -1,8 +1,13 @@
 # IT Chat
 
-A Google Chat bot for IT Tickets on Zoho ServiceDesk Platform.
+A Google Chat bot for IT Tickets on Zoho ServiceDesk Platform at Straive.
 
 It answers questions based on the user's IT tickets.
+
+To use it:
+
+1. Add "IT Chat - Straive" to your chat or space. Contact <s.anand@gramener.com> if this is not visible to you.
+2. DM it saying something, e.g. "@IT Chat - Straive Help". It'll share the status of your tickets.
 
 ## Setup
 
@@ -10,6 +15,17 @@ It answers questions based on the user's IT tickets.
   - Client name: IT Chat LLM App
   - Homepage URL: https://itchat.straive.app/
   - Redirect URIs: https://itchat.straive.app/token
+- Configure the [Chat API in Straive-Internal Apps project on Google Cloud Console](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat?authuser=2&project=straive-internal-apps)
+  - App Name: IT Chat - Straive
+  - Avatar URL: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCPpb1Hpdia-kMDmeGQOCgxplz2m_EUPbWsw&s`
+  - Description: Check your Service Desk ticket status
+  - Interactive features: Enable everything
+  - Connection Settings: App URL
+  - App URL: `https://itchat.straive.app/googlechat`
+  - App home URL: `https://itchat.straive.app/`
+  - Authentication audience: App URL
+  - Visibility: Make chat available to specific people and groups in Straive.com (add users)
+  - Logs: Log errors to Logging
 - Log into <https://dash.cloudflare.com/> as <root.node@gmail.com>
   - Create a worker called `itchat` with a custom domain `itchat.straive.app`
   - Clone [this repository](https://github.com/gramener/itchat)

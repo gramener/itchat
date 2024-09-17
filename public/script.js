@@ -104,7 +104,7 @@ app.addEventListener("submit", async (e) => {
       }),
     });
     const aiData = await aiResponse.json();
-    const summary = aiData.choices?.[0]?.message?.content || aiData.error?.message || "Unable to generate summary";
+    const summary = aiData.choices?.[0]?.message?.content ?? (aiData.error ? JSON.stringify(aiData.error) : "Unable to generate summary");
     render(unsafeHTML(marked.parse(summary)), document.getElementById("ai-summary"));
   } catch (error) {
     render(html`Error generating AI summary: ${error.message}`, aiSummary);
