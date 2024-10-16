@@ -151,13 +151,7 @@ Here is the status of the user's tickets.`,
         const formattedSummary = summary
           .replace(/\[([^\]]+)\]\((https?:\/\/[^\s]+)\)/g, "<$2|$1>") // Replace Markdown links with Google Chat format
           .replace(/\*\*(.*?)\*\*/g, "*$1*"); // Replace bold (**) with italics (*) for emphasis
-        response = {
-          text:
-            formattedSummary +
-            (sdpData.requests.length == 0
-              ? "\n\nPS: This app no longer works because the API account s.anand@straive.com does not have access to the IT tickets."
-              : ""),
-        };
+        response = { text: formattedSummary };
         break;
       }
       case "ADDED_TO_SPACE":

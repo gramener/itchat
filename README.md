@@ -11,7 +11,7 @@ To use it:
 
 ## Setup
 
-- In the [Zoho API Console](https://api-console.zoho.com/add) log in as s.anand@straive.com (via email OTP) and add a client for "Server Based Applications" with:
+- In the [Zoho API Console](https://api-console.zoho.com/add) log in as sdpaitest@straive.com (via email OTP forwarded to s.anand@gramener.com) and add a client for "Server Based Applications" with:
   - Client name: IT Chat LLM App
   - Homepage URL: https://itchat.straive.app/
   - Redirect URIs: https://itchat.straive.app/token
@@ -36,6 +36,7 @@ To use it:
     - `SDP_CLIENT_SECRET`: Via [Zoho API Console](https://api-console.zoho.com/add)
     - `LLMFOUNDRY_TOKEN`: Via [LLM Foundry](https://llmfoundry.straive.com/code)
 - Run `npm run deploy` to deploy on Cloudflare
+- Visit <https://itchat.straive.app/token> as admin to save the `refresh_token` and initialize the app
 
 ## Authentication flow
 
