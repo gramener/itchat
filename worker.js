@@ -10,7 +10,7 @@ export default {
     try {
       return await getAssetFromKV(
         { request, waitUntil: ctx.waitUntil.bind(ctx) },
-        { ASSET_NAMESPACE: env.__STATIC_CONTENT, ASSET_MANIFEST: assetManifest },
+        { ASSET_NAMESPACE: env.__STATIC_CONTENT, ASSET_MANIFEST: assetManifest }
       );
     } catch {
       return new Response("Not Found", { status: 404 });
@@ -121,7 +121,7 @@ Subject: ${r.subject}
 Status: ${r.status.name}
 Technician: ${r.technician?.email_id || "N/A"}
 Created: ${r.created_time.display_value}
-Due By: ${r.due_by_time?.display_value || "N/A"}`,
+Due By: ${r.due_by_time?.display_value || "N/A"}`
           )
           .join("\n\n");
 
@@ -151,12 +151,20 @@ Here is the status of the user's tickets.`,
         const formattedSummary = summary
           .replace(/\[([^\]]+)\]\((https?:\/\/[^\s]+)\)/g, "<$2|$1>") // Replace Markdown links with Google Chat format
           .replace(/\*\*(.*?)\*\*/g, "*$1*"); // Replace bold (**) with italics (*) for emphasis
-        response = { text: formattedSummary };
+        response = {
+          text:
+            formattedSummary +
+            (sdpData.length == 0
+              ? "\n\nPS: This app no longer works because the API account s.anand@straive.com does not have access to the IT tickets."
+              : ""),
+        };
         break;
       }
       case "ADDED_TO_SPACE":
         response = {
-          text: `Thanks for adding me${body.space.type === "ROOM" ? " to " + body.space.displayName : ""}! Type 'help' to see what I can do.`,
+          text: `Thanks for adding me${
+            body.space.type === "ROOM" ? " to " + body.space.displayName : ""
+          }! Type '@IT Chat - Straive help' to see what I can do.`,
         };
         break;
       case "REMOVED_FROM_SPACE":

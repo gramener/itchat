@@ -11,7 +11,7 @@ To use it:
 
 ## Setup
 
-- In the [Zoho API Console](https://api-console.zoho.com/add) log in as s.anand@straive.com and add a client for "Server Based Applications" with:
+- In the [Zoho API Console](https://api-console.zoho.com/add) log in as s.anand@straive.com (via email OTP) and add a client for "Server Based Applications" with:
   - Client name: IT Chat LLM App
   - Homepage URL: https://itchat.straive.app/
   - Redirect URIs: https://itchat.straive.app/token
