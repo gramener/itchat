@@ -154,7 +154,7 @@ Here is the status of the user's tickets.`,
         response = {
           text:
             formattedSummary +
-            (sdpData.length == 0
+            (sdpData.requests.length == 0
               ? "\n\nPS: This app no longer works because the API account s.anand@straive.com does not have access to the IT tickets."
               : ""),
         };
