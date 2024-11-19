@@ -150,7 +150,8 @@ Explain to the user if they have any open tickets and when they'll get resolved.
 If none are open, explain the status of their most recent ticket or two.
 Here is the status of the user's tickets.`,
               },
-              { role: "user", content: ticketSummary },
+              { role: "assistant", content: ticketSummary },
+              { role: "user", content: `What is the status of the user's ticket? ${body.message.text}` },
             ],
           }),
         });
