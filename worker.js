@@ -65,6 +65,14 @@ const routes = {
     });
   },
 
+  "/assent": async ({ url, env }) => {
+    const assentData = await getAssent(url.search);
+    return new Response(JSON.stringify(assentData), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  },
+
   "/request": async ({ url, env }) => {
     let accessToken = await env.tokens.get("access_token");
     if (!accessToken) accessToken = await refreshAccessToken(env);
@@ -216,6 +224,11 @@ async function getRequests(env, email) {
   }
 
   return await sdpResponse.json();
+}
+
+async function getAssent(search) {
+  const url = `https://myappsapi.straive.com/assenttickets/api/AssentRequest/GetRequests${search}`;
+  return await fetch(url).then((r) => r.json());
 }
 
 async function refreshAccessToken(env) {
