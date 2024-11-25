@@ -26,6 +26,7 @@ To use it:
   - Authentication audience: App URL
   - Visibility: Make chat available to specific people and groups in Straive.com (add users)
   - Logs: Log errors to Logging
+- Add members via [Straive IT Chat mailing group](https://groups.google.com/u/2/a/gramener.com/g/straive-it-chat/members)
 - Log into <https://dash.cloudflare.com/> as <root.node@gmail.com>
   - Create a worker called `itchat` with a custom domain `itchat.straive.app`
   - Clone [this repository](https://github.com/gramener/itchat)
