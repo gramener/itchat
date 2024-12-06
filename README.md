@@ -15,15 +15,15 @@ To use it:
   - Client name: IT Chat LLM App
   - Homepage URL: https://itchat.straive.app/
   - Redirect URIs: https://itchat.straive.app/token
-- Configure the [Chat API in Straive-Internal Apps project on Google Cloud Console](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat?authuser=2&project=straive-internal-apps)
+- Configure the [Chat API in Straive-Internal Apps project on Google Cloud Console](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat?authuser=2&project=it-chatbot-443909) <!-- It was earlier set up at project=straive-internal-apps but moved because it was not under the Straive organization -->
   - App Name: IT Chat - Straive
   - Avatar URL: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCPpb1Hpdia-kMDmeGQOCgxplz2m_EUPbWsw&s`
   - Description: Check your Service Desk ticket status
   - Interactive features: Enable everything
-  - Connection Settings: App URL
-  - App URL: `https://itchat.straive.app/googlechat`
+  - Connection Settings: HTTP endpoint URL
+  - HTTP endpoint URL: `https://itchat.straive.app/googlechat`
   - App home URL: `https://itchat.straive.app/`
-  - Authentication audience: App URL
+  - Authentication audience: HTTP endpoint URL
   - Visibility: Make chat available to specific people and groups in Straive.com (add users)
   - Logs: Log errors to Logging
 - Add members via [Straive IT Chat mailing group](https://groups.google.com/u/2/a/gramener.com/g/straive-it-chat/members)
